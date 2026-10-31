@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frost & Co. — Магазин стильной зимней одежды</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        frostBg: '#f0f4f8',
+                        frostCard: '#ffffff',
+                        frostPrimary: '#0284c7',
+                        frostDark: '#0369a1',
+                        frostDeep: '#0f172a',
+                        frostAccent: '#38bdf8',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            color: #0369a1;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e0f2fe;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #38bdf8;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #0284c7;
+        }
+    </style>
+</head>
+<body class="bg-frostBg text-frostDark antialiased selection:bg-sky-200 selection:text-sky-900">
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 bg-sky-900 text-white px-6 py-3 rounded-2xl shadow-xl flex items-center space-x-3 border border-sky-700">
+        <i class="fa-solid fa-circle-check text-sky-400 text-lg"></i>
+        <span id="toast-message" class="font-medium text-sm">Товар добавлен в корзину!</span>
+    </div>
+
+    <!-- Header / Navigation -->
+    <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-sky-100 shadow-sm transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="#" class="flex items-center space-x-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-400 to-sky-600 flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-snowflake text-xl"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-xl font-bold tracking-tight text-slate-900">Frost & Co.</span>
+                    <span class="text-xs text-sky-600 font-semibold tracking-widest uppercase">Nordic Style</span>
+                </div>
+            </a>
+
+            <!-- Desktop Navigation Links -->
+            <nav class="hidden md:flex items-center space-x-8 font-medium text-slate-700">
+                <a href="#catalog" class="hover:text-frostPrimary transition-colors">Каталог</a>
+                <a href="#about" class="hover:text-frostPrimary transition-colors">О нас</a>
+                <a href="#delivery" class="hover:text-frostPrimary transition-colors">Доставка и оплата</a>
+                <a href="#contacts" class="hover:text-frostPrimary transition-colors">Мы в соцсетях</a>
+            </nav>
+
+            <!-- Actions (Cart & Mobile Menu Toggle) -->
+            <div class="flex items-center space-x-4">
+                <button onclick="openCart()" class="relative p-2.5 rounded-xl bg-sky-50 text-frostPrimary hover:bg-sky-100 transition-colors focus:outline-none focus:ring-2 focus:ring-sky-400">
+                    <i class="fa-solid fa-bag-shopping text-lg"></i>
+                    <span id="cart-badge" class="absolute -top-1 -right-1 bg-sky-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold shadow-sm">0</span>
+                </button>
+                <button onclick="toggleMobileMenu()" class="md:hidden p-2.5 rounded-xl bg-sky-50 text-frostPrimary hover:bg-sky-100 transition-colors">
+                    <i id="menu-icon" class="fa-solid fa-bars text-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-sky-100 px-6 py-4 space-y-3 shadow-lg">
+            <a href="#catalog" onclick="toggleMobileMenu()" class="block font-medium text-slate-700 hover:text-frostPrimary py-2">Каталог</a>
+            <a href="#about" onclick="toggleMobileMenu()" class="block font-medium text-slate-700 hover:text-frostPrimary py-2">О нас</a>
+            <a href="#delivery" onclick="toggleMobileMenu()" class="block font-medium text-slate-700 hover:text-frostPrimary py-2">Доставка и оплата</a>
+            <a href="#contacts" onclick="toggleMobileMenu()" class="block font-medium text-slate-700 hover:text-frostPrimary py-2">Мы в соцсетях</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden py-16 lg:py-24 bg-gradient-to-b from-sky-50/50 via-frostBg to-frostBg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Left text content -->
+                <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                    <div class="inline-flex items-center space-x-2 bg-sky-100 text-sky-800 px-4 py-1.5 rounded-full text-sm font-semibold tracking-wide shadow-sm">
+                        <i class="fa-solid fa-temperature-low text-frostPrimary"></i>
+                        <span>Коллекция Зима 2026/2027</span>
+                    </div>
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                        Согревайтесь стильно <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-sky-700">этой зимой</span>
+                    </h1>
+                    <p class="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto lg:mx-0 font-normal leading-relaxed">
+                        Премиальная верхняя одежда и утепленные аксессуары, созданные для суровых морозов и городских будней в северном эстетичном стиле.
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-3 sm:space-y-0 sm:space-x-4 pt-4">
+                        <a href="#catalog" class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 rounded-2xl bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white font-semibold shadow-lg shadow-sky-500/25 transition-all transform hover:-translate-y-0.5">
+                            <span>Смотреть каталог</span>
+                            <i class="fa-solid fa-arrow-down ml-2"></i>
+                        </a>
+                        <a href="#about" class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 rounded-2xl bg-white hover:bg-sky-50 text-slate-700 font-semibold border border-sky-200 shadow-sm transition-all">
+                            <span>Узнать больше</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right visual element / high-end winter imagery placeholder -->
+                <div class="lg:col-span-5 relative">
+                    <div class="relative mx-auto max-w-md lg:max-w-none">
+                        <!-- Decorative background glow -->
+                        <div class="absolute -inset-4 bg-gradient-to-r from-sky-300 to-sky-500 rounded-3xl blur-2xl opacity-30 animate-pulse"></div>
+                        
+                        <!-- Main banner card -->
+                        <div class="relative bg-white rounded-3xl p-6 shadow-xl border border-sky-100 flex flex-col space-y-6">
+                            <div class="h-64 sm:h-80 w-full rounded-2xl bg-gradient-to-br from-sky-100 via-sky-200 to-sky-300 overflow-hidden relative flex items-center justify-center group">
+                                <!-- Abstract Winter Illustration via CSS and SVG -->
+                                <div class="absolute inset-0 opacity-40 bg-[radial-gradient(#0284c7_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                                <div class="text-center z-10 p-6">
+                                    <i class="fa-solid fa-snowflake text-6xl text-sky-600 mb-3 animate-spin duration-1000"></i>
+                                    <h3 class="text-xl font-bold text-slate-800">Frost & Co. Signature</h3>
+                                    <p class="text-sm text-sky-700 font-medium mt-1">До -30°C • Мембранная ткань</p>
+                                </div>
+                                <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-800 shadow-sm">
+                                    <i class="fa-solid fa-star text-amber-400 mr-1"></i> 4.9 (Хит продаж)
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4 text-center">
+                                <div class="bg-sky-50/80 p-3 rounded-2xl border border-sky-100">
+                                    <span class="block text-xl font-bold text-sky-800">-30°</span>
+                                    <span class="text-xs text-sky-600 font-medium">Защита от холода</span>
+                                </div>
+                                <div class="bg-sky-50/80 p-3 rounded-2xl border border-sky-100">
+                                    <span class="block text-xl font-bold text-sky-800">100%</span>
+                                    <span class="text-xs text-sky-600 font-medium">Влагозащита</span>
+                                </div>
+                                <div class="bg-sky-50/80 p-3 rounded-2xl border border-sky-100">
+                                    <span class="block text-xl font-bold text-sky-800">2 года</span>
+                                    <span class="text-xs text-sky-600 font-medium">Гарантия качества</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Catalog Section -->
+    <section id="catalog" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-frostPrimary font-semibold text-sm tracking-widest uppercase bg-sky-50 px-3 py-1 rounded-full border border-sky-100">Зимняя коллекция</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-3 tracking-tight">Популярные модели каталога</h2>
+                <p class="text-slate-600 mt-3 text-base sm:text-lg">Выберите идеальную экипировку для морозных дней с доставкой на дом.</p>
+            </div>
+
+            <!-- Product Grid (4 items) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                
+                <!-- Product 1 -->
+                <div class="group bg-frostBg rounded-3xl p-5 border border-sky-100 hover:border-sky-300 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
+                    <div>
+                        <div class="h-56 w-full rounded-2xl bg-gradient-to-br from-sky-200 to-sky-400 relative overflow-hidden flex items-center justify-center mb-5">
+                            <div class="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors"></div>
+                            <i class="fa-solid fa-vest text-5xl text-white drop-shadow-md group-hover:scale-110 transition-transform duration-300"></i>
+                            <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-sky-900 text-xs font-bold px-2.5 py-1 rounded-lg shadow-sm">Хит</span>
+                        </div>
+                        <h3 class="font-bold text-lg text-slate-900 group-hover:text-frostPrimary transition-colors">Пуховик Arctic</h3>
+                        <p class="text-slate-600 text-sm mt-1.5 leading-relaxed">Удлиненный пуховик на натуральном пуху с глубоким капюшоном.</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-sky-100 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-sky-600 font-medium block">Цена</span>
+                            <span class="text-lg font-bold text-slate-900">24 990 ₽</span>
+                        </div>
+                        <button onclick="addToCart('Пуховик Arctic', 24990)" class="px-4 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-medium text-sm shadow-md shadow-sky-500/20 transition-all flex items-center space-x-2">
+                            <i class="fa-solid fa-plus text-xs"></i>
+                            <span>В корзину</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="group bg-frostBg rounded-3xl p-5 border border-sky-100 hover:border-sky-300 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
+                    <div>
+                        <div class="h-56 w-full rounded-2xl bg-gradient-to-br from-sky-300 to-sky-500 relative overflow-hidden flex items-center justify-center mb-5">
+                            <div class="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors"></div>
+                            <i class="fa-solid fa-shirt text-5xl text-white drop-shadow-md group-hover:scale-110 transition-transform duration-300"></i>
+                            <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-sky-900 text-xs font-bold px-2.5 py-1 rounded-lg shadow-sm">Новинка</span>
+                        </div>
+                        <h3 class="font-bold text-lg text-slate-900 group-hover:text-frostPrimary transition-colors">Зимняя парка</h3>
+                        <p class="text-slate-600 text-sm mt-1.5 leading-relaxed">Ветрозащитная парка с флисовым подкладом и прочным внешним слоем.</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-sky-100 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-sky-600 font-medium block">Цена</span>
+                            <span class="text-lg font-bold text-slate-900">19 490 ₽</span>
+                        </div>
+                        <button onclick="addToCart('Зимняя парка', 19490)" class="px-4 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-medium text-sm shadow-md shadow-sky-500/20 transition-all flex items-center space-x-2">
+                            <i class="fa-solid fa-plus text-xs"></i>
+                            <span>В корзину</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="group bg-frostBg rounded-3xl p-5 border border-sky-100 hover:border-sky-300 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
+                    <div>
+                        <div class="h-56 w-full rounded-2xl bg-gradient-to-br from-sky-200 to-sky-600 relative overflow-hidden flex items-center justify-center mb-5">
+                            <div class="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors"></div>
+                            <i class="fa-solid fa-vest-patches text-5xl text-white drop-shadow-md group-hover:scale-110 transition-transform duration-300"></i>
+                            <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-sky-900 text-xs font-bold px-2.5 py-1 rounded-lg shadow-sm">Тренды</span>
+                        </div>
+                        <h3 class="font-bold text-lg text-slate-900 group-hover:text-frostPrimary transition-colors">Уютный свитер</h3>
+                        <p class="text-slate-600 text-sm mt-1.5 leading-relaxed">Объемный свитер из мягкой шерсти мериноса с высоким горлом.</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-sky-100 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-sky-600 font-medium block">Цена</span>
+                            <span class="text-lg font-bold text-slate-900">6 990 ₽</span>
+                        </div>
+                        <button onclick="addToCart('Уютный свитер', 6990)" class="px-4 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-medium text-sm shadow-md shadow-sky-500/20 transition-all flex items-center space-x-2">
+                            <i class="fa-solid fa-plus text-xs"></i>
+                            <span>В корзину</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Product 4 -->
+                <div class="group bg-frostBg rounded-3xl p-5 border border-sky-100 hover:border-sky-300 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
+                    <div>
+                        <div class="h-56 w-full rounded-2xl bg-gradient-to-br from-sky-400 to-sky-700 relative overflow-hidden flex items-center justify-center mb-5">
+                            <div class="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors"></div>
+                            <i class="fa-solid fa-mitten text-5xl text-white drop-shadow-md group-hover:scale-110 transition-transform duration-300"></i>
+                            <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-sky-900 text-xs font-bold px-2.5 py-1 rounded-lg shadow-sm">Комфорт</span>
+                        </div>
+                        <h3 class="font-bold text-lg text-slate-900 group-hover:text-frostPrimary transition-colors">Термобелье</h3>
+                        <p class="text-slate-600 text-sm mt-1.5 leading-relaxed">Дышащий комплект термобелья для активного отдыха и спорта на улице.</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-sky-100 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-sky-600 font-medium block">Цена</span>
+                            <span class="text-lg font-bold text-slate-900">4 500 ₽</span>
+                        </div>
+                        <button onclick="addToCart('Термобелье', 4500)" class="px-4 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-medium text-sm shadow-md shadow-sky-500/20 transition-all flex items-center space-x-2">
+                            <i class="fa-solid fa-plus text-xs"></i>
+                            <span>В корзину</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-frostBg border-t border-sky-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6">
+                    <span class="text-frostPrimary font-semibold text-sm tracking-widest uppercase bg-sky-100 px-3 py-1 rounded-full border border-sky-200">О нашем бренде</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Тепло и качество в каждой нити</h2>
+                    <p class="text-slate-600 text-base sm:text-lg leading-relaxed">
+                        Бренд <strong class="text-slate-900">Frost & Co.</strong> родился из любви к северной природе и суровым зимам. Мы вешаем стандарты качества на максимум, используя современные мембранные ткани, гипоаллергенный утеплитель и эргономичный крой.
+                    </p>
+                    <p class="text-slate-600 text-base sm:text-lg leading-relaxed">
+                        Наша одежда создана для тех, кто не привык сидеть дома из-за холодов. Каждая модель проходит строгий контроль качества, выдерживая экстремальные температуры и сохраняя первозданный вид год за годом.
+                    </p>
+                    <div class="grid grid-cols-2 gap-6 pt-4">
+                        <div class="bg-white p-5 rounded-2xl border border-sky-100 shadow-sm">
+                            <span class="block text-3xl font-extrabold text-sky-600">10+</span>
+                            <span class="text-sm text-slate-600 font-medium">Лет на рынке комфорта</span>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl border border-sky-100 shadow-sm">
+                            <span class="block text-3xl font-extrabold text-sky-600">45,000+</span>
+                            <span class="text-sm text-slate-600 font-medium">Счастливых покупателей</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="bg-white rounded-3xl p-8 border border-sky-100 shadow-xl space-y-6">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-14 h-14 rounded-2xl bg-sky-100 flex items-center justify-center text-sky-600">
+                                <i class="fa-solid fa-shield-snowflake text-2xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-lg">Премиальные материалы</h4>
+                                <p class="text-slate-600 text-sm">Только проверенные утеплители и долговечная фурнитура.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <div class="w-14 h-14 rounded-2xl bg-sky-100 flex items-center justify-center text-sky-600">
+                                <i class="fa-solid fa-wind text-2xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-lg">Защита от ветра и влаги</h4>
+                                <p class="text-slate-600 text-sm">Инновационная мембрана сохраняет сухость в любую метель.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <div class="w-14 h-14 rounded-2xl bg-sky-100 flex items-center justify-center text-sky-600">
+                                <i class="fa-solid fa-heart text-2xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-lg">Скандинавский дизайн</h4>
+                                <p class="text-slate-600 text-sm">Лаконичность, функциональность и внимание к деталям.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Delivery & Payment Section -->
+    <section id="delivery" class="py-20 bg-white border-t border-sky-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-frostPrimary font-semibold text-sm tracking-widest uppercase bg-sky-50 px-3 py-1 rounded-full border border-sky-100">Условия сервиса</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-3 tracking-tight">Доставка и оплата</h2>
+                <p class="text-slate-600 mt-3 text-base sm:text-lg">Быстро доставим ваш заказ в любую точку страны с возможностью примерки.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="bg-frostBg rounded-3xl p-8 border border-sky-100 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 rounded-2xl bg-sky-600 text-white flex items-center justify-center mb-6 shadow-md shadow-sky-500/20">
+                            <i class="fa-solid fa-truck-fast text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Курьерская доставка</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">Быстрая доставка курьером прямо до вашей двери. Срок доставки по стране от 2 до 5 рабочих дней.</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-sky-200 text-sm font-semibold text-sky-700">
+                        Бесплатно от 10 000 ₽
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-frostBg rounded-3xl p-8 border border-sky-100 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 rounded-2xl bg-sky-600 text-white flex items-center justify-center mb-6 shadow-md shadow-sky-500/20">
+                            <i class="fa-solid fa-box-open text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Пункты выдачи</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">Более 3000 пунктов выдачи заказов по всей стране. Удобное время получения и возможность примерки.</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-sky-200 text-sm font-semibold text-sky-700">
+                        Срок хранения 7 дней
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-frostBg rounded-3xl p-8 border border-sky-100 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 rounded-2xl bg-sky-600 text-white flex items-center justify-center mb-6 shadow-md shadow-sky-500/20">
+                            <i class="fa-solid fa-credit-card text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Удобная оплата</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">Оплата банковской картой онлайн на сайте или при получении после осмотра и примерки товара.</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-sky-200 text-sm font-semibold text-sky-700">
+                        Безопасные платежи
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contacts Section & Footer -->
+    <footer id="contacts" class="bg-slate-900 text-slate-300 pt-16 pb-12 border-t border-sky-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 pb-12 border-b border-slate-800">
+                <!-- Col 1 -->
+                <div class="space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-sky-500 flex items-center justify-center text-white shadow-md">
+                            <i class="fa-solid fa-snowflake text-xl"></i>
+                        </div>
+                        <span class="text-xl font-bold text-white tracking-tight">Frost & Co.</span>
+                    </div>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        Ваш надежный проводник в мире стильной и технологичной зимней одежды. Согреваем с заботой.
+                    </p>
+                </div>
+
+                <!-- Col 2 -->
+                <div class="space-y-4">
+                    <h4 class="text-white font-bold text-base">Навигация</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#catalog" class="hover:text-sky-400 transition-colors">Каталог товаров</a></li>
+                        <li><a href="#about" class="hover:text-sky-400 transition-colors">О компании</a></li>
+                        <li><a href="#delivery" class="hover:text-sky-400 transition-colors">Доставка и оплата</a></li>
+                        <li><a href="#contacts" class="hover:text-sky-400 transition-colors">Мы в соцсетях</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 3 -->
+                <div class="space-y-4">
+                    <h4 class="text-white font-bold text-base">Контакты</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-center space-x-3">
+                            <i class="fa-solid fa-phone text-sky-400"></i>
+                            <span>8 (800) 555-35-35</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fa-solid fa-envelope text-sky-400"></i>
+                            <span>support@frostandco.ru</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <i class="fa-solid fa-location-dot text-sky-400"></i>
+                            <span>г. Москва, ул. Северная, 15</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Col 4 -->
+                <div class="space-y-4">
+                    <h4 class="text-white font-bold text-base">Мы в соцсетях</h4>
+                    <p class="text-sm text-slate-400">Следите за новинками и акциями в наших соцсетях:</p>
+                    <div class="flex space-x-3">
+                        <a href="#" class="w-10 h-10 rounded-xl bg-slate-800 hover:bg-sky-600 text-white flex items-center justify-center transition-colors" title="Telegram">
+                            <i class="fa-brands fa-telegram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-xl bg-slate-800 hover:bg-sky-600 text-white flex items-center justify-center transition-colors" title="Instagram">
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-xl bg-slate-800 hover:bg-sky-600 text-white flex items-center justify-center transition-colors" title="VK">
+                            <i class="fa-brands fa-vk"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-xl bg-slate-800 hover:bg-sky-600 text-white flex items-center justify-center transition-colors" title="WhatsApp">
+                            <i class="fa-brands fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Copyright -->
+            <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500">
+                <p>&copy; 2026 Frost & Co. Все права защищены.</p>
+                <div class="flex space-x-6 mt-4 sm:mt-0">
+                    <a href="#" class="hover:text-slate-400 transition-colors">Политика конфиденциальности</a>
+                    <a href="#" class="hover:text-slate-400 transition-colors">Условия использования</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart Modal Overlay -->
+    <div id="cart-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-sky-100 flex flex-col max-h-[90vh]">
+            <div class="flex items-center justify-between pb-4 border-b border-sky-100">
+                <h3 class="text-xl font-bold text-slate-900 flex items-center space-x-2">
+                    <i class="fa-solid fa-bag-shopping text-frostPrimary"></i>
+                    <span>Ваша корзина</span>
+                </h3>
+                <button onclick="closeCart()" class="p-2 rounded-xl bg-sky-50 text-slate-600 hover:bg-sky-100 transition-colors">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            
+            <!-- Cart Items List -->
+            <div id="cart-items" class="py-4 space-y-4 overflow-y-auto flex-grow max-h-64">
+                <p class="text-slate-500 text-center py-8">Корзина пуста</p>
+            </div>
+
+            <!-- Cart Summary & Checkout -->
+            <div class="pt-4 border-t border-sky-100 space-y-4">
+                <div class="flex items-center justify-between font-bold text-lg text-slate-900">
+                    <span>Итого:</span>
+                    <span id="cart-total">0 ₽</span>
+                </div>
+                <button onclick="checkout()" class="w-full py-3.5 rounded-2xl bg-sky-600 hover:bg-sky-700 text-white font-semibold shadow-lg shadow-sky-500/20 transition-all">
+                    Оформить заказ
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Interactive Logic -->
+    <script>
+        let cart = [];
+
+        // Toggle Mobile Menu
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.getElementById('menu-icon');
+            menu.classList.toggle('hidden');
+            if (menu.classList.contains('hidden')) {
+                icon.className = 'fa-solid fa-bars text-lg';
+            } else {
+                icon.className = 'fa-solid fa-xmark text-lg';
+            }
+        }
+
+        // Add to Cart
+        function addToCart(name, price) {
+            const existingItem = cart.find(item => item.name === name);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ name, price, quantity: 1 });
+            }
+            updateCartUI();
+            showToast(`Товар "${name}" добавлен в корзину`);
+        }
+
+        // Remove from Cart
+        function removeFromCart(name) {
+            cart = cart.filter(item => item.name !== name);
+            updateCartUI();
+        }
+
+        // Update Cart UI
+        function updateCartUI() {
+            const badge = document.getElementById('cart-badge');
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            badge.textContent = totalItems;
+
+            const container = document.getElementById('cart-items');
+            const totalEl = document.getElementById('cart-total');
+
+            if (cart.length === 0) {
+                container.innerHTML = `<p class="text-slate-500 text-center py-8">Корзина пуста</p>`;
+                totalEl.textContent = '0 ₽';
+                return;
+            }
+
+            let html = '';
+            let totalPrice = 0;
+
+            cart.forEach(item => {
+                totalPrice += item.price * item.quantity;
+                html += `
+                    <div class="flex items-center justify-between bg-sky-50/50 p-3 rounded-2xl border border-sky-100">
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-sm">${item.name}</h4>
+                            <span class="text-xs text-sky-600 font-medium">${item.price.toLocaleString()} ₽ × ${item.quantity}</span>
+                        </div>
+                        <button onclick="removeFromCart('${item.name}')" class="text-rose-500 hover:text-rose-700 p-2">
+                            <i class="fa-solid fa-trash-can text-sm"></i>
+                        </button>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            totalEl.textContent = totalPrice.toLocaleString() + ' ₽';
+        }
+
+        // Open/Close Cart Modal
+        function openCart() {
+            const modal = document.getElementById('cart-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeCart() {
+            const modal = document.getElementById('cart-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Toast Notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            toastMsg.textContent = message;
+            
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3000);
+        }
+
+        // Checkout function
+        function checkout() {
+            if (cart.length === 0) {
+                showToast('Ваша корзина пуста!');
+                return;
+            }
+            showToast('Спасибо за заказ! Менеджер свяжется с вами.');
+            cart = [];
+            updateCartUI();
+            closeCart();
+        }
+    </script>
+</body>
+</html>
